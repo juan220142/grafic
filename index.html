@@ -62,17 +62,17 @@
         var autoPosicion0;
 
         // Variables del auto
-        var auto;
-        var chasis;
-        var cabina;
-        var llantaDI;
-        var llantaDD;
-        var llantaTI;
-        var llantaTD;
-        var luzDI;
-        var luzDD;
-        var sirena;
-        var basesirena;
+        var tanque;
+        var base;
+        var canon;
+        var canon1;
+        var base_canon;
+        var oruga_izq;
+        var oruga_der;
+        var escotilla;
+        var sir_r;
+        var sir_a;
+        var radar;
 
         var autoVelocidad;
         var autoAngulo;
@@ -137,7 +137,7 @@
                 if (!modoJuego) {
                     return;
                 };
-                if (auto == null) {
+                if (tanque == null) {
                     return;
                 };
                 event.preventDefault();
@@ -154,34 +154,35 @@
                 // Se gira el auto a la izquierda
                 if (event.key == 'left') {
                     autoAngulo = autoAngulo - (Math.PI / 180) * 5;
-                    auto.rotate(-5);
+                    tanque.rotate(-5);
                 };
                 // Se gira el auto a la derecha
                 if (event.key == 'right') {
                     autoAngulo = autoAngulo + (Math.PI / 180) * 5;
-                    auto.rotate(5);
+                    tanque.rotate(5);
                 };
             };
 
             // En cada frame
             view.onFrame = function (event) {
                 if (modoJuego) {
-                    if (auto != null) {
-                        sirena.rotate(3, auto.position);
+                    if (tanque != null) {
+                      sir_r.rotate(8,0);
+                      radar.rotate(2,0);
                         // Se actualiza la ubicacion del auto, segun la velocidad
-                        var xp = auto.position.x + (Math.cos(autoAngulo) * autoVelocidad);
-                        var yp = auto.position.y + (Math.sin(autoAngulo) * autoVelocidad);
-                        auto.position.x = Math.max(0, Math.min(xp, view.size.width));
-                        auto.position.y = Math.max(0, Math.min(yp, view.size.height));
+                        var xp = tanque.position.x + (Math.cos(autoAngulo) * autoVelocidad);
+                        var yp = tanque.position.y + (Math.sin(autoAngulo) * autoVelocidad);
+                        tanque.position.x = Math.max(0, Math.min(xp, view.size.width));
+                        tanque.position.y = Math.max(0, Math.min(yp, view.size.height));
                         autoVelocidad = autoVelocidad * 0.9;
 
 
                         // Verifica que se encuentre sobre un poligono
-                        var hitResult = pistaOverlayLayer.hitTest(auto.position);
+                        var hitResult = pistaOverlayLayer.hitTest(tanque.position);
                         if (hitResult) {
                             if (hitResult.item.flag == null) {
                                 hitResult.item.flag = true;
-                                auto.scale((hitResult.item.bounds.height) / (auto.bounds.height));
+                                tanque.scale((hitResult.item.bounds.height) / (tanque.bounds.height));
                                 hitResult.item.style.fillColor = 'green';
                                 segmentosLimpios++;
                             }
@@ -202,7 +203,7 @@
                                 bestcro = cro;
                             }
                             else {
-                                alert('Fin del juego. Todavía no eres el mejor :(');
+                                alert('Fin del juego. Todavï¿½a no eres el mejor :(');
                             }
                             segmentosLimpios++; // Para solo mostrar una alerta una vez
                             reiniciar();
@@ -240,72 +241,72 @@
 
             // Limpio la capa del auto e inicializo un nuevo auto
             autoLayer.clear();
-            auto = new Group();
+          tanque= new Group();
+          base= new Path.Rectangle(new Point(50, 50), new Size(150, 80))
+          base.style = {
+            fillColor: 'green',
+            strokeColor: 'black'
+          }
+          tanque.addChild(base);
+          base_canon=new Path.Circle(new Point(100,90), 20);
+          base_canon.style ={
+            fillColor: 'green',
+            strokeColor: 'black'
+          }
+          tanque.addChild(base_canon);
+          canon=new Path.Rectangle(new Point(25, 85), new Size(80, 10))
+          canon.style={
+            fillColor: 'green',
+            strokeColor: 'black'
+          }
 
-            chasis = new Path.Rectangle(new Point(50, 50), new Size(100, 50));
-            chasis.style = {
-                fillColor: 'white',
-                strokeColor: 'black'
-            };
-            auto.addChild(chasis);
 
-            cabina = new Path.Rectangle(new Point(50 + 25, 50), new Size(50, 50));
-            cabina.style = {
-                fillColor: 'red',
-                strokeColor: 'black'
-            };
-            auto.addChild(cabina);
+          tanque.addChild(canon)
+          oruga_izq=  new Path.Rectangle(new Point(50, 120), new Size(150, 20))
+          oruga_izq.style={
+            fillColor: 'black',
+            strokeColor:'white'
+          }
+          oruga_der=  new Path.Rectangle(new Point(50, 40), new Size(150,20))
+          oruga_der.style={
+            fillColor: 'black',
+            strokeColor:'white'
+          }
+          tanque.addChild(oruga_izq);
+          tanque.addChild(oruga_der);
+          sir_a= new Path.Circle(new Point(100,90), 10);
+          sir_a.style={
+            fillColor:'black',
+            strokeColor:'white'
 
-            llantaDI = new Path.RoundRectangle(new Rectangle(new Point(50 + 10, 50 - 5), new Point(80, 55 - 5)), new Size(2, 2));
-            llantaDD = new Path.RoundRectangle(new Rectangle(new Point(150 - 30, 50 - 5), new Point(140, 55 - 5)), new Size(2, 2));
-            llantaTI = new Path.RoundRectangle(new Rectangle(new Point(50 + 10, 100), new Point(80, 105)), new Size(2, 2));
-            llantaTD = new Path.RoundRectangle(new Rectangle(new Point(150 - 30, 100), new Point(140, 105)), new Size(2, 2));
-            llantaDI.fillColor = 'black';
-            llantaDD.fillColor = 'black';
-            llantaTI.fillColor = 'black';
-            llantaTD.fillColor = 'black';
-            auto.addChild(llantaDI);
-            auto.addChild(llantaDD);
-            auto.addChild(llantaTI);
-            auto.addChild(llantaTD);
+          }
+          sir_r=  new Path.Rectangle(new Point(165, 90), new Size(35,5))
+          sir_r.style={
+            fillColor:'black',
+            strokeColor:'white'
 
-            luzDI = new Path();
-            luzDI.add(new Point(45, 15 + 50));
-            luzDI.add(new Point(45, 5 + 50));
-            luzDI.add(new Point(50, 10 + 50));
-            luzDI.closed = true;
-            luzDD = new Path();
-            luzDD.add(new Point(45, 45 + 50));
-            luzDD.add(new Point(45, 35 + 50));
-            luzDD.add(new Point(50, 40 + 50));
-            luzDD.closed = true;
-            luzDD.fillColor = 'yellow';
-            luzDD.strokeColor = 'black';
-            luzDI.fillColor = 'yellow';
-            luzDI.strokeColor = 'black';
-            auto.addChild(luzDD);
-            auto.addChild(luzDD);
-            auto.addChild(luzDI);
-            auto.addChild(luzDI);
+          }
+          tanque.addChild(sir_a);
+          tanque.addChild(sir_r);
+          escotilla=  new Path.Rectangle(new Point(140, 80), new Size(20,20))
+          escotilla.style={
+            fillColor: 'black',
+            strokeColor: 'white'
+          }
+          tanque.addChild(escotilla)
+          radar = new Path.Rectangle(new Point(165, 90), new Size(35,5))
+          radar.style={
+            fillColor:'gray',
+            strokeColor:'white'
+          }
+          tanque.addChild(radar);
 
-            basesirena = new Path.Circle(new Point(50 + 50, 50 + 25), 5);
-            basesirena.fillColor = 'blue';
-            auto.addChild(basesirena);
-
-            sirena = new Path();
-            sirena.add(new Point(50 + 50 - 5, 50 + 25 + 25));
-            sirena.add(new Point(50 + 50, 50 + 25));
-            sirena.add(new Point(50 + 50 + 5, 50 + 25 + 25));
-            sirena.closed = true;
-            sirena.fillColor = 'blue';
-            auto.addChild(sirena);
-
-            autoLayer.addChild(auto);
+            autoLayer.addChild(tanque);
             autoVelocidad = 0;
 
             autoAngulo = (autoAngulo0 + 360) * (Math.PI / 180);
-            auto.rotate(autoAngulo0 + 180);
-            auto.position = autoPosicion0;
+            tanque.rotate(autoAngulo0 + 180);
+            tanque.position = autoPosicion0;
 
             // Defino los poligonos de la pista
             // Comienzo en 1 porque la linea esta incluida, y termino antes del ultimo
@@ -349,46 +350,46 @@
 
         //variables de inicio:
         var marcha = 0; //control del temporizador
-        var cro = 0; //estado inicial del cronómetro.
+        var cro = 0; //estado inicial del cronï¿½metro.
         var bestcro = 99999999999999999;
         //cronometro en marcha. Empezar en 0:
         function empezar() {
-            if (marcha == 0) { //solo si el cronómetro esta parado
+            if (marcha == 0) { //solo si el cronï¿½metro esta parado
                 emp = new Date() //fecha actual
-                elcrono = setInterval(tiempo, 10); //función del temporizador.
+                elcrono = setInterval(tiempo, 10); //funciï¿½n del temporizador.
                 marcha = 1 //indicamos que se ha puesto en marcha.
             }
         }
-        function tiempo() { //función del temporizador
+        function tiempo() { //funciï¿½n del temporizador
             actual = new Date() //fecha en el instante
             cro = actual - emp //tiempo transcurrido en milisegundos
             cr = new Date() //fecha donde guardamos el tiempo transcurrido
             cr.setTime(cro)
-            cs = cr.getMilliseconds() //milisegundos del cronómetro
-            cs = cs / 10; //paso a centésimas de segundo.
+            cs = cr.getMilliseconds() //milisegundos del cronï¿½metro
+            cs = cs / 10; //paso a centï¿½simas de segundo.
             cs = Math.round(cs)
-            sg = cr.getSeconds(); //segundos del cronómetro
-            mn = cr.getMinutes(); //minutos del cronómetro
-            ho = cr.getHours() - 1; //horas del cronómetro
-            if (cs < 10) { cs = "0" + cs; }  //poner siempre 2 cifras en los números
+            sg = cr.getSeconds(); //segundos del cronï¿½metro
+            mn = cr.getMinutes(); //minutos del cronï¿½metro
+            ho = cr.getHours() - 1; //horas del cronï¿½metro
+            if (cs < 10) { cs = "0" + cs; }  //poner siempre 2 cifras en los nï¿½meros
             if (sg < 10) { sg = "0" + sg; }
             if (mn < 10) { mn = "0" + mn; }
             document.getElementById("reloj").innerHTML = mn + " : " + sg + " : " + cs; //pasar a pantalla.
         }
-        //parar el cronómetro
+        //parar el cronï¿½metro
         function parar() {
-            if (marcha == 1) { //sólo si está en funcionamiento
+            if (marcha == 1) { //sï¿½lo si estï¿½ en funcionamiento
                 clearInterval(elcrono); //parar el crono
-                marcha = 0; //indicar que está parado.
+                marcha = 0; //indicar que estï¿½ parado.
             }
         }
 
 
         //Volver al estado inicial
         function reiniciar() {
-            if (marcha == 1) { //si el cronómetro está en marcha:
+            if (marcha == 1) { //si el cronï¿½metro estï¿½ en marcha:
                 clearInterval(elcrono); //parar el crono
-                marcha = 0;	//indicar que está parado
+                marcha = 0;	//indicar que estï¿½ parado
             }
             cro = 0; //tiempo transcurrido a cero
             document.getElementById("reloj").innerHTML = "00 : 00 : 00"; //visor a cero
