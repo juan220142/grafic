@@ -152,7 +152,7 @@ window.onload = function () {
 
             if (person != null) {
               parar();
-              x = "Mejor Tiempo = " + person + " -> " + document.getElementById("reloj").innerHTML + "<br>";
+              x = person + " -> " + document.getElementById("reloj").innerHTML + "<br>";
               document.getElementById("bestplayer").innerHTML = x;
             }
             bestcro = cro;
@@ -178,7 +178,7 @@ function dibujarPista() {
   pista.clear();
   autoLayer.clear();
   pistaOverlayLayer.clear();
-  bestcro = 99999999999999999999;
+  bestcro = 99999999999999;
   document.getElementById("bestplayer").innerHTML = "";
 };
 
@@ -306,7 +306,7 @@ function jugar() {
 //variables de inicio:
 var marcha = 0; //control del temporizador
 var cro = 0; //estado inicial del cron�metro.
-var bestcro = 99999999999999999;
+var bestcro = 999999999999999;
 //cronometro en marcha. Empezar en 0:
 function empezar() {
   if (marcha == 0) { //solo si el cron�metro esta parado

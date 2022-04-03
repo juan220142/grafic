@@ -1,17 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik+Glitch&family=Rubik+Moonrocks&family=Rubik+Puddles&display=swap');
+
 * {
      margin: auto;
      padding: 0;
  }
+
+.resizable {
+  resize: none;
+  /* overflow: scroll;
+  border: 1px solid black; */
+}
 
  h1 {
      padding: 0.5em;
      text-align: center;
  }
 
+.font-ppal{
+  font-family: 'Rubik Moonrocks', cursive;
+}
+
  #cronometro {
-     padding: 10px;
      width: 200px;
-     color: white;
      text-align: center;
  }
 
