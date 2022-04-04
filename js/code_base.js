@@ -5,22 +5,24 @@ var modoJuego = false;
 var bgLayer;
 var pistaLayer;
 var autoLayer;
+var objLayer;
 
 // Variables de la pista (segmentos) y camino
 var pista;
 var path;
-var puntoInicial;
+var puntoInicial = 150;
 var segmentosLimpios;
 
 // Angulo inicial;
-var autoAngulo0;
-var autoPosicion0;
+var autoAngulo0 = 0;
+var autoPosicion0= 150;
 
 // Variables del auto
+var objetivo;
 var tanque;
 var base;
 var canon;
-var canon1;
+var cabeza_canon;
 var base_canon;
 var oruga_izq;
 var oruga_der;
@@ -28,9 +30,12 @@ var escotilla;
 var sir_r;
 var sir_a;
 var radar;
+var proyectil;
 
 var autoVelocidad;
 var autoAngulo;
+var proyVelocidad = 0;
+
 
 window.onload = function () {
   paper.setup('myCanvas');
@@ -40,7 +45,7 @@ window.onload = function () {
   pistaLayer = new Layer();
   pistaOverlayLayer = new Layer();
   autoLayer = new Layer();
-
+  objLayer = new Layer();
   // A la capa de pista le incluye el objeto pista
   pista = new Group();
   pistaLayer.addChild(pista);
@@ -49,45 +54,7 @@ window.onload = function () {
   tool.minDistance = 10;
   tool.maxDistance = 45;
 
-  // Al hacer click, se inicia a pintar una pista
-  tool.onMouseDown = function (event) {
-    if (modoJuego) {
-      return;
-    }
-    pista.clear();
-    path = new Path();
-    pista.addChild(path);
-    path.strokeColor = '#00000';
-    path.selected = true;
 
-    autoPosicion0 = event.point;
-    path.add(event.point);
-    puntoInicial = event.point;
-  };
-
-  // Al arrastrar el mouse, se pinta los segmentos de pista
-  tool.onMouseDrag = function (event) {
-    if (modoJuego) {
-      return;
-    }
-    var step = event.delta;
-    autoAngulo0 = step.angle;
-    step.angle += 90;
-
-    var top = event.middlePoint.add(step);
-    var bottom = event.middlePoint.subtract(step);
-
-    var line = new Path();
-    line.strokeColor = '#000000';
-    line.add(top);
-    line.add(bottom);
-    pista.addChild(line);
-
-    path.add(top);
-    path.insert(0, bottom);
-  };
-
-  // Si se utilizan las fechas, mueve el auto
   tool.onKeyDown = function (event) {
     if (!modoJuego) {
       return;
@@ -117,8 +84,14 @@ window.onload = function () {
       tanque.rotate(5);
     };
     if(event.key == 'space'){
-      autoAngulo = autoAngulo + (Math.PI / 180) * 5;
-      tanque.rotate(5);
+      proyVelocidad+=60;
+
+
+
+
+
+
+
     }
   };
 
@@ -128,45 +101,42 @@ window.onload = function () {
       if (tanque != null) {
         sir_r.rotate(8, 0);
         radar.rotate(2, 0);
+
         // Se actualiza la ubicacion del auto, segun la velocidad
+
         var xp = tanque.position.x + (Math.cos(autoAngulo) * autoVelocidad);
         var yp = tanque.position.y + (Math.sin(autoAngulo) * autoVelocidad);
         tanque.position.x = Math.max(0, Math.min(xp, view.size.width));
         tanque.position.y = Math.max(0, Math.min(yp, view.size.height));
         autoVelocidad = autoVelocidad * 0.9;
 
+        var xpro = proyectil.position.x+((Math.cos(autoAngulo) * proyVelocidad));
+        var ypro = proyectil.position.y + (Math.sin(autoAngulo) * proyVelocidad);
+        proyectil.position.x = Math.max(0, Math.min(xpro, view.size.width));
+        proyectil.position.y = Math.max(0, Math.min(ypro, view.size.height));
+        proyVelocidad *= 0.9;
 
         // Verifica que se encuentre sobre un poligono
-        var hitResult = pistaOverlayLayer.hitTest(tanque.position);
+        var hitResult = objLayer.hitTest(proyectil.position);
         if (hitResult) {
           if (hitResult.item.flag == null) {
             hitResult.item.flag = true;
-            tanque.scale((hitResult.item.bounds.height) / (tanque.bounds.height));
-            hitResult.item.style.fillColor = 'green';
+            var px= Math.random();
+            var py= Math.random();
+            objetivo.clear();
+              objetivo = new Path.Circle(new Point(px * 500, py * 500), 20);
+              objetivo.style = {
+                fillColor: 'black',
+                strokeColor: 'blue'
+              }
+
+            objLayer.addChild(objetivo);
             segmentosLimpios++;
           }
         };
 
         // Verifica el final de juego
-        if (segmentosLimpios == pistaOverlayLayer.children.length) {
 
-          parar();
-          if (cro < bestcro) {
-            var person = prompt("Haz hecho el mejor registro!, escribe tu nombre", "Player 1");
-
-            if (person != null) {
-              parar();
-              x = person + " -> " + document.getElementById("reloj").innerHTML + "<br>";
-              document.getElementById("bestplayer").innerHTML = x;
-            }
-            bestcro = cro;
-          }
-          else {
-            alert('Fin del juego. Todav�a no eres el mejor :(');
-          }
-          segmentosLimpios++; // Para solo mostrar una alerta una vez
-          reiniciar();
-        };
 
         tiempo
 
@@ -177,21 +147,10 @@ window.onload = function () {
 }
 
 // En modo dibujar pista, limpia la pista actual y limpia la capa de auto
-function dibujarPista() {
-  modoJuego = false;
-  pista.clear();
-  autoLayer.clear();
-  pistaOverlayLayer.clear();
-  bestcro = 99999999999999;
-  document.getElementById("bestplayer").innerHTML = "";
-};
 
 // En modo juego, se incluye un nuevo auto y se inicia con angulo 0, velocidad 0
 function jugar() {
-  if (pista.children.length <= 1) {
-    alert('No se ha dibujado una pista');
-    return;
-  }
+
 
   modoJuego = true;
   segmentosLimpios = 0;
@@ -255,51 +214,41 @@ function jugar() {
   tanque.addChild(escotilla)
   radar = new Path.Rectangle(new Point(165, 90), new Size(35, 5))
   radar.style = {
-    fillColor: 'gray',
+    fillColor: 'black',
     strokeColor: 'white'
   }
   tanque.addChild(radar);
-
+  cabeza_canon = new Path.Rectangle(new Point(25, 82.5), new Size(5, 15))
+  cabeza_canon.style={
+    fillColor: 'black',
+    strokeColor: 'white'
+  }
+  tanque.addChild(cabeza_canon)
+  proyectil = new Path.Circle(new Point(100, 90), 4);
+  proyectil.style={
+    fillColor: 'black',
+    strokeColor: 'black'
+  }
+  tanque.addChild(proyectil);
   autoLayer.addChild(tanque);
+
   autoVelocidad = 0;
 
   autoAngulo = (autoAngulo0 + 360) * (Math.PI / 180);
   tanque.rotate(autoAngulo0 + 180);
   tanque.position = autoPosicion0;
+  objetivo = new Path.Circle(new Point(400, 90), 20);
+  objetivo.style= {
+    fillColor: 'black',
+    strokeColor: 'blue'
+  }
+  objLayer.addChild(objetivo);
 
   // Defino los poligonos de la pista
   // Comienzo en 1 porque la linea esta incluida, y termino antes del ultimo
   // puesto que debo completar un poligono al final de la pista
   pistaOverlayLayer.clear();
-  for (var i = 0; i < pista.children.length - 1; i++) {
 
-    // Obtiene los puntos de la linea
-    var p1;
-    var p2;
-    var p3;
-    var p4;
-    if (i == 0) {
-      p1 = puntoInicial;
-      p2 = puntoInicial;
-    } else {
-      p1 = new Point(pista.children[i].getSegments()[0].getPoint().x, pista.children[i].getSegments()[0].getPoint().y);
-      p2 = new Point(pista.children[i].getSegments()[1].getPoint().x, pista.children[i].getSegments()[1].getPoint().y);
-    }
-    p3 = new Point(pista.children[i + 1].getSegments()[1].getPoint().x, pista.children[i + 1].getSegments()[1].getPoint().y);
-    p4 = new Point(pista.children[i + 1].getSegments()[0].getPoint().x, pista.children[i + 1].getSegments()[0].getPoint().y);
-
-    var poligono = new Path();
-    poligono.add(p1);
-    poligono.add(p2);
-    poligono.add(p3);
-    poligono.add(p4);
-    poligono.closed = true;
-    poligono.style = {
-      fillColor: 'red',
-      strokeColor: 'black'
-    };
-    pistaOverlayLayer.addChild(poligono);
-  };
 
   var now = new Date();
 
@@ -310,7 +259,7 @@ function jugar() {
 //variables de inicio:
 var marcha = 0; //control del temporizador
 var cro = 0; //estado inicial del cron�metro.
-var bestcro = 999999999999999;
+var bestcro = 99999999999999999;
 //cronometro en marcha. Empezar en 0:
 function empezar() {
   if (marcha == 0) { //solo si el cron�metro esta parado
