@@ -10,9 +10,9 @@
 
     <!-- Styles -->
     <link rel="icon" href="./img/tank.png">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="./css/style.css" type="text/css" rel="stylesheet" />
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
@@ -20,8 +20,8 @@
 
 <body class="">
     <div class="flex" style="font-family: roboto; overflow: hidden; ">
-        <div class="w-1/4 absolute top-0 left-0">
-            <div class="font-ppal text-center text-7xl my-3">
+        <div class="w-1/4 absolute top-0 left-4">
+            <div class="font-ppal text-center text-9xl my-3">
                 Tank Attack
             </div>
             <div class=" rounded-3xl mx-3 mt-6 ">
@@ -29,27 +29,35 @@
                     <div id="reloj" class="rounded-full">00 : 00 : 00</div>
                 </div>
 
-                <label class="ml-3">Mejor tiempo</label>
-                <div class="border-2 rounded-xl h-12 text-xl text-center">
+                <label class="ml-3 mt-3 ">Mejor tiempo</label>
+                <div class="border-2 rounded-xl h-20 text-xl text-center bg-gray-200">
                     <p class=" my-auto" style="font-weight:bold;" id="bestplayer"></p>
                 </div>
 
-                <button type="button" class=" mt-4 mx-auto btn btn-outline-success border-2 border-green-300"
+                <button type="button" id="play"
+                    class=" mt-16 text-2xl font-semibold mx-auto  btn btn-outline-success border-2 border-green-300 position-relative top-50 start-50 translate-middle"
                     onClick="jugar();">
                     Iniciar/Reiniciar
                 </button>
 
-                <div class="border-2 rounded-3xl text-xl text-center mt-6 pt-3 pb-24 ">
-
-                    <label>Pista: </label>
-                    <select class="py-1 my-4 px-8 rounded-xl border-2">
-                        <option value="pasto.jpg">Pasto</option>
-                        <option value="arena.jpg">Arena</option>
-                        <option value="asfalto.jpg">Carretera</option>
-                        <option value="tierra.jpg">Tierra</option>
-                    </select>
-                    <label>Puntos: </label>
-                    <p>Puntos: </p>
+                <div class="border-2 rounded-3xl text-xl text-center mt-6 pt-3 pb-80 bg-gray-200">
+                    <div>
+                        <label>Pista: </label>
+                        <select id="background" class="text-2xl py-2 my-4 ml-4 px-8 rounded-xl border-2"
+                            onchange="cambiarFondo(this)">
+                            <option value="pasto.jpg">Pasto</option>
+                            <option value="arena.jpg">Arena</option>
+                            <option value="asfalto.jpg">Carretera</option>
+                            <option value="tierra.jpg">Tierra</option>
+                        </select>
+                        <button></button>
+                    </div>
+                    <div class="">
+                        <label>Puntos: </label>
+                        <span class="text-2xl ml-6 px-16 py-2 w-24 rounded-xl bg-white">
+                            120 pts
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -57,15 +65,9 @@
 
         <div class=" bg-blue-500 w-1/4 h-full"></div>
 
-        <div class="flex flex-col w-3/4 h-screen ">
-            <canvas id="myCanvas" class="w-full h-full rounded-3xl my-10 mx-10 "
-                style="background-image: url('img/arena.jpg'); "></canvas>
-            <!-- <div class="bg-blue-500 w-full flex">
-                <div class="border-2 border-white">
-                    <button type="button" class="btn btn-primary" onClick="dibujarPista();">Dibujar Pista</button>&nbsp;
-
-                </div>
-            </div> -->
+        <div class="flex flex-col w-3/4  h-screen ">
+            <canvas id="myCanvas" class="w-3/4 h-full rounded-3xl my-10"
+                style="background-image:(url('./img/bg.jpg')); background-color: green;"></canvas>
         </div>
 
         <!-- <canvas id="tank" resize></canvas> -->
@@ -81,6 +83,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var bg = document.getElementById("background").value;
+        document.getElementById("myCanvas").style.backgroundImage = "url('./img/pasto.jpg')";
+        function cambiarFondo(e) {
+            bg = e.value;
+            if (bg == "arena.jpg") {
+                document.getElementById("myCanvas").style.backgroundImage = "url('./img/arena.jpg')";
+            }
+            else if (bg == "asfalto.jpg") {
+                document.getElementById("myCanvas").style.backgroundImage = "url('./img/asfalto.jpg')";
+            }
+            else if (bg == "tierra.jpg") {
+                document.getElementById("myCanvas").style.backgroundImage = "url('./img/tierra.jpg')";
+            } else {
+                document.getElementById("myCanvas").style.backgroundImage = "url('./img/pasto.jpg')";
+
+            }
+
+        }
+    </script>
 
 </body>
 
