@@ -31,6 +31,8 @@ var sir_r;
 var sir_a;
 var radar;
 var proyectil;
+var disp= false;
+var puntos = 0;
 
 var autoVelocidad;
 var autoAngulo;
@@ -77,14 +79,36 @@ window.onload = function () {
     if (event.key == 'left') {
       autoAngulo = autoAngulo - (Math.PI / 180) * 5;
       tanque.rotate(-5);
+      disp=false;
     };
     // Se gira el auto a la derecha
     if (event.key == 'right') {
       autoAngulo = autoAngulo + (Math.PI / 180) * 5;
       tanque.rotate(5);
+      disp=false;
     };
     if(event.key == 'space'){
-      proyVelocidad+=60;
+      proyVelocidad+=90;
+      disp= true;
+      if(disp){
+        disp=false;
+        proyectil.clear()
+        tanque.positionX
+        tanque.positionY
+        proyectil = new Path.Circle(new Point( tanque.position.x+ (Math.cos(autoAngulo) * autoVelocidad), tanque.position.y + (Math.sin(autoAngulo) * autoVelocidad) ), 4);
+        proyectil.style={
+          fillColor: 'black',
+          strokeColor: 'black'
+        }
+        tanque.addChild(proyectil);
+
+      }
+
+
+
+
+
+
 
 
 
@@ -116,6 +140,7 @@ window.onload = function () {
         proyectil.position.y = Math.max(0, Math.min(ypro, view.size.height));
         proyVelocidad *= 0.9;
 
+
         // Verifica que se encuentre sobre un poligono
         var hitResult = objLayer.hitTest(proyectil.position);
         if (hitResult) {
@@ -131,7 +156,7 @@ window.onload = function () {
               }
 
             objLayer.addChild(objetivo);
-            segmentosLimpios++;
+            puntos++;
           }
         };
 
@@ -158,6 +183,7 @@ function jugar() {
   empezar();
 
   // Limpio la capa del auto e inicializo un nuevo auto
+  objLayer.clear();
   autoLayer.clear();
   tanque = new Group();
   base = new Path.Rectangle(new Point(50, 50), new Size(150, 80))
