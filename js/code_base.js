@@ -15,7 +15,7 @@ var segmentosLimpios;
 
 // Angulo inicial;
 var autoAngulo0 = 0;
-var autoPosicion0= 150;
+var autoPosicion0 = 150;
 
 // Variables del auto
 var objetivo;
@@ -31,7 +31,7 @@ var sir_r;
 var sir_a;
 var radar;
 var proyectil;
-var disp= false;
+var disp = false;
 var puntos = 0;
 
 var autoVelocidad;
@@ -79,24 +79,24 @@ window.onload = function () {
     if (event.key == 'left') {
       autoAngulo = autoAngulo - (Math.PI / 180) * 5;
       tanque.rotate(-5);
-      disp=false;
+      disp = false;
     };
     // Se gira el auto a la derecha
     if (event.key == 'right') {
       autoAngulo = autoAngulo + (Math.PI / 180) * 5;
       tanque.rotate(5);
-      disp=false;
+      disp = false;
     };
-    if(event.key == 'space'){
-      proyVelocidad+=90;
-      disp= true;
-      if(disp){
-        disp=false;
+    if (event.key == 'space') {
+      proyVelocidad += 90;
+      disp = true;
+      if (disp) {
+        disp = false;
         proyectil.clear()
         tanque.positionX
         tanque.positionY
-        proyectil = new Path.Circle(new Point( tanque.position.x+ (Math.cos(autoAngulo) * autoVelocidad), tanque.position.y + (Math.sin(autoAngulo) * autoVelocidad) ), 4);
-        proyectil.style={
+        proyectil = new Path.Circle(new Point(tanque.position.x + (Math.cos(autoAngulo) * autoVelocidad), tanque.position.y + (Math.sin(autoAngulo) * autoVelocidad)), 4);
+        proyectil.style = {
           fillColor: 'black',
           strokeColor: 'black'
         }
@@ -134,7 +134,7 @@ window.onload = function () {
         tanque.position.y = Math.max(0, Math.min(yp, view.size.height));
         autoVelocidad = autoVelocidad * 0.9;
 
-        var xpro = proyectil.position.x+((Math.cos(autoAngulo) * proyVelocidad));
+        var xpro = proyectil.position.x + ((Math.cos(autoAngulo) * proyVelocidad));
         var ypro = proyectil.position.y + (Math.sin(autoAngulo) * proyVelocidad);
         proyectil.position.x = Math.max(0, Math.min(xpro, view.size.width));
         proyectil.position.y = Math.max(0, Math.min(ypro, view.size.height));
@@ -146,22 +146,24 @@ window.onload = function () {
         if (hitResult) {
           if (hitResult.item.flag == null) {
             hitResult.item.flag = true;
-            var px= Math.random();
-            var py= Math.random();
+            var px = Math.random();
+            var py = Math.random();
             objetivo.clear();
-              objetivo = new Path.Circle(new Point(px * 500, py * 500), 15);
-              objetivo.style = {
-                fillColor: 'white',
-                strokeColor: 'blue'
-              }
+            objetivo = new Path.Circle(new Point(px * 500, py * 500), 15);
+            objetivo.style = {
+              fillColor: 'white',
+              strokeColor: 'blue'
+            }
 
             objLayer.addChild(objetivo);
             puntos++;
-            document.getElementById("points").innerHTML = puntos;
-            if(puntos == 5){
-              document.getElementById("estado").innerHTML= "ganaste en el tiempo:  "+ mn+" : "+sg+" : "+cs;
+            document.getElementById("points").innerHTML = puntos + " pts";
+            if (puntos == 5) {
+              document.getElementById("estado").innerHTML = "Tú tiempo fue:  " + mn + " : " + sg + " : " + cs;
               tanque.clear();
               objetivo.clear();
+              parar();
+              puntos = 0;
             }
           }
         };
@@ -251,13 +253,13 @@ function jugar() {
   }
   tanque.addChild(radar);
   cabeza_canon = new Path.Rectangle(new Point(25, 82.5), new Size(5, 15))
-  cabeza_canon.style={
+  cabeza_canon.style = {
     fillColor: 'black',
     strokeColor: 'white'
   }
   tanque.addChild(cabeza_canon)
   proyectil = new Path.Circle(new Point(100, 90), 4);
-  proyectil.style={
+  proyectil.style = {
     fillColor: 'black',
     strokeColor: 'black'
   }
@@ -270,7 +272,7 @@ function jugar() {
   tanque.rotate(autoAngulo0 + 180);
   tanque.position = autoPosicion0;
   objetivo = new Path.Circle(new Point(400, 90), 15);
-  objetivo.style= {
+  objetivo.style = {
     fillColor: 'white',
     strokeColor: 'blue'
   }
@@ -291,7 +293,7 @@ function jugar() {
 //variables de inicio:
 var marcha = 0; //control del temporizador
 var cro = 0; //estado inicial del cron�metro.
-var bestcro = 99999999999999999;
+var bestcro = 9999999999999;
 //cronometro en marcha. Empezar en 0:
 function empezar() {
   if (marcha == 0) { //solo si el cron�metro esta parado
