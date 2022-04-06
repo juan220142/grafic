@@ -149,14 +149,20 @@ window.onload = function () {
             var px= Math.random();
             var py= Math.random();
             objetivo.clear();
-              objetivo = new Path.Circle(new Point(px * 500, py * 500), 20);
+              objetivo = new Path.Circle(new Point(px * 500, py * 500), 15);
               objetivo.style = {
-                fillColor: 'black',
+                fillColor: 'white',
                 strokeColor: 'blue'
               }
 
             objLayer.addChild(objetivo);
             puntos++;
+            document.getElementById("points").innerHTML = puntos;
+            if(puntos == 5){
+              document.getElementById("estado").innerHTML= "ganaste en el tiempo:  "+ mn+" : "+sg+" : "+cs;
+              tanque.clear();
+              objetivo.clear();
+            }
           }
         };
 
@@ -263,9 +269,9 @@ function jugar() {
   autoAngulo = (autoAngulo0 + 360) * (Math.PI / 180);
   tanque.rotate(autoAngulo0 + 180);
   tanque.position = autoPosicion0;
-  objetivo = new Path.Circle(new Point(400, 90), 20);
+  objetivo = new Path.Circle(new Point(400, 90), 15);
   objetivo.style= {
-    fillColor: 'black',
+    fillColor: 'white',
     strokeColor: 'blue'
   }
   objLayer.addChild(objetivo);
