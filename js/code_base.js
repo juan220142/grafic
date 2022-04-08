@@ -101,21 +101,7 @@ window.onload = function () {
           strokeColor: 'black'
         }
         tanque.addChild(proyectil);
-
       }
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
   };
 
@@ -127,7 +113,6 @@ window.onload = function () {
         radar.rotate(2, 0);
 
         // Se actualiza la ubicacion del auto, segun la velocidad
-
         var xp = tanque.position.x + (Math.cos(autoAngulo) * autoVelocidad);
         var yp = tanque.position.y + (Math.sin(autoAngulo) * autoVelocidad);
         tanque.position.x = Math.max(0, Math.min(xp, view.size.width));
@@ -167,12 +152,8 @@ window.onload = function () {
             }
           }
         };
-
         // Verifica el final de juego
-
-
         tiempo
-
       };
     };
   };
@@ -183,8 +164,6 @@ window.onload = function () {
 
 // En modo juego, se incluye un nuevo auto y se inicia con angulo 0, velocidad 0
 function jugar() {
-
-
   modoJuego = true;
   segmentosLimpios = 0;
   reiniciar();
@@ -211,8 +190,6 @@ function jugar() {
     fillColor: 'green',
     strokeColor: 'black'
   }
-
-
   tanque.addChild(canon)
   oruga_izq = new Path.Rectangle(new Point(50, 120), new Size(150, 20))
   oruga_izq.style = {
